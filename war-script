@@ -1,0 +1,51 @@
+pipeline {
+    agent any
+    tools {
+        maven 'maven3.9.9'
+    }
+    options {
+        ansiColor('xterm')
+    }
+    stages {
+        stage('checkout') {
+            steps {
+                git changelog: false, poll: false, url: 'https://github.com/swamy527/java-web-project-1.git'
+            }
+        }
+         stage('test') {
+            steps {
+                sh 'mvn clean test'
+            }
+        }
+        stage('scanning') {
+            steps {
+                sh 'mvn sonar:sonar'
+            }
+        }
+        stage('print') {
+            steps {
+                sh 'echo -e "\033[32mThis text is green\033[0m"'
+            }
+        }
+        stage('package') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+        stage('artifact-publish') {
+            steps {
+                sh 'mvn clean deploy'
+            }
+        }
+        stage('deploy') {
+            steps {
+                deploy adapters: [tomcat9(credentialsId: 'tomcat-auth', path: '', url: 'http://54.172.80.79:8080/')], contextPath: null, war: '**/my-java-web-app-1.0-SNAPSHOT.war'
+            }
+        }
+    }
+    post {
+        always {
+            deleteDir()
+        }
+    }
+}
