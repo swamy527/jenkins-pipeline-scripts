@@ -19,7 +19,7 @@ pipeline {
         }
         stage('scanning') {
             steps {
-                 withSonarQubeEnv('mysonar') {
+                 withSonarQubeEnv('mysonar') {   #need sonarqube scanner plugin and add sonarqube server configuraion in system settings
                    sh 'mvn sonar:sonar'
                 }
             }
