@@ -49,5 +49,11 @@ pipeline {
         always {
             deleteDir()
         }
+        success {
+            slackSend (
+               channel: 'working-test',
+               message: 'Build success'
+            )
+        }
     }
 }
