@@ -52,7 +52,7 @@ pipeline {
         success {
             slackSend (
                channel: 'working-test',
-               message: 'Build success'
+               message: "Build ${BUILD_NUMBER} is success"
             )
         }
     }
